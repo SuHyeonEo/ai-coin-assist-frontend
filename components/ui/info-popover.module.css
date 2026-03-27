@@ -1,0 +1,48 @@
+.trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  flex: none;
+}
+
+.button {
+  width: 17px;
+  height: 17px;
+  border: 1px solid var(--border-medium);
+  border-radius: 999px;
+  background: var(--surface-primary);
+  color: var(--text-tertiary);
+  display: grid;
+  place-items: center;
+  font-size: 0.67rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.button:hover,
+.button[data-open="true"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border-medium));
+  transform: translateY(-1px);
+}
+
+.panel {
+  position: fixed;
+  width: min(220px, calc(100vw - 40px));
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-md);
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  line-height: 1.6;
+  white-space: normal;
+  z-index: 120;
+}
