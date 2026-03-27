@@ -1,0 +1,45 @@
+name: Bug Report
+description: 버그나 회귀를 제보합니다.
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 문제 요약
+      description: 어떤 문제가 발생했는지 간단히 적어주세요.
+      placeholder: 리포트 상세 페이지에서 reference news 섹션이 비어 있어도 레이아웃이 깨집니다.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 방법
+      description: 가능한 재현 순서를 적어주세요.
+      placeholder: |
+        1. /?symbol=BTCUSDT&reportType=SHORT_TERM 접속
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 동작
+      description: 원래 어떤 동작이어야 하는지 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 동작
+      description: 실제로 어떤 문제가 있었는지 적어주세요.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 환경
+      description: 브라우저, OS, API base URL 등 관련 환경을 적어주세요.
+      placeholder: Chrome 135 / Windows 11 / localhost API
+
