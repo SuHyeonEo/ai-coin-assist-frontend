@@ -1,0 +1,33 @@
+name: Feature Request
+description: 기능 개선이나 새 UX를 제안합니다.
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 해결하려는 문제
+      description: 어떤 사용자 문제를 해결하려는지 적어주세요.
+      placeholder: 최신 리포트만 볼 수 있어서 이전 분석 흐름을 빠르게 비교하기 어렵습니다.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 제안 내용
+      description: 원하는 UX 또는 기능을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: dto
+    attributes:
+      label: API / DTO 영향
+      description: 프론트엔드에서 해결 가능한지, API DTO 추가가 필요한지 적어주세요.
+      placeholder: 프론트엔드만으로 가능 / API에 freshness metadata 추가 필요
+  - type: textarea
+    id: notes
+    attributes:
+      label: 참고 사항
+      description: 링크, 화면 예시, 관련 이슈 등을 적어주세요.
+
