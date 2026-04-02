@@ -1,136 +1,147 @@
 # AI Coin Assist Frontend
 
-AI Coin Assist의 프론트엔드 저장소입니다. 이 프로젝트는 거래 화면이 아니라, API가 제공하는 분석 DTO를 차분하고 읽기 좋은 리포트 경험으로 렌더링하는 데 집중합니다.
+> 서버가 계산한 시장 분석 결과를, 사람이 읽기 쉬운 리포트 화면으로 정리하는 Next.js 프론트엔드
 
 ## Overview
 
-- 목적: 시장 해석 리포트를 요약에서 상세로 자연스럽게 읽게 하는 읽기 중심 UI
-- 역할: API 응답을 신뢰 가능한 화면 DTO로 소비하고, 표시와 포맷팅에만 책임을 둠
-- 금지: 프론트엔드에서 RSI, MACD, 시나리오, 추세 판단 같은 분석 로직 재계산
+이 프로젝트는 트레이딩 터미널이 아니라 **읽기 중심의 시장 분석 UI**를 목표로 만들었습니다.  
+가격, 기술지표, 거래 참여도, 구조 분석, GPT 내러티브를 한 화면에서 자연스럽게 읽을 수 있도록 정리하는 것이 이 저장소의 역할입니다.
 
-서비스 구성은 아래와 같습니다.
+핵심 원칙은 단순합니다.
 
-- `batch`: 분석 팩트, 리포트 payload, narrative 생성
-- `api`: batch 결과를 프론트엔드용 DTO로 조합
-- `ai-coin-assist-frontend`: DTO를 읽기 좋은 화면으로 렌더링
+- 계산은 서버가 한다
+- 프론트는 결과를 읽기 좋게 보여준다
+- 프론트에서 RSI, MACD, 추세 판단 같은 분석 로직을 다시 계산하지 않는다
 
-## Product Direction
+## Why This Frontend Exists
 
-이 UI는 "트레이딩 터미널"이 아니라 "리서치 브리프"에 가깝게 동작해야 합니다.
+AI Coin Assist 전체 시스템에서 프론트엔드는 “예쁜 화면”보다  
+**구조화된 분석 결과를 신뢰감 있게 전달하는 마지막 표현 계층**에 가깝습니다.
 
-- 리포트 읽기 UX 우선
-- summary-to-detail 정보 흐름
-- 모바일/데스크톱 모두에서 안정적인 가독성
-- 다크/라이트 모드 모두 의도적으로 지원
-- API DTO를 truth source로 사용
+그래서 이 프로젝트는 다음에 집중했습니다.
 
-## Stack
+- 요약에서 상세로 자연스럽게 이어지는 정보 흐름
+- 모바일과 데스크톱 모두에서 안정적인 가독성
+- 서버 응답을 그대로 신뢰하는 표시 중심 UI
+- 숫자 나열이 아니라 문맥이 읽히는 리포트형 화면 구성
 
-- Next.js 16 App Router
+## Why Next.js
+
+이 프로젝트에서 Next.js를 선택한 이유는 명확합니다.
+
+### 1. 읽기 중심 화면에 잘 맞는 구조
+
+이 서비스는 실시간 입력보다 **조회와 읽기**가 중심입니다.  
+Next.js App Router 구조는 페이지 단위 데이터를 먼저 모으고, 완성도 높은 읽기 화면을 만드는 데 잘 맞았습니다.
+
+### 2. 서버 렌더링과 라우팅을 한 프로젝트 안에서 정리하기 쉬움
+
+분석 리포트 서비스는 페이지 구조, 라우팅, 데이터 조회가 강하게 연결됩니다.  
+Next.js는 이를 한 저장소 안에서 일관되게 구성하기 쉬워 초기 구현과 운영에 유리했습니다.
+
+### 3. 배포 구조가 단순함
+
+이 프로젝트는 프론트도 Docker로 배포하고 있기 때문에,  
+Next.js 기반 단일 앱 구조가 운영 복잡도를 줄이는 데 도움이 됐습니다.
+
+## How This Frontend Was Built
+
+저는 프론트엔드 전문 개발자는 아니기 때문에,  
+이 저장소는 **Codex를 적극적으로 활용해 구조를 잡고 구현한 프로젝트**이기도 합니다.
+
+다만 단순 생성에 맡긴 것이 아니라, 아래 기준으로 계속 수정했습니다.
+
+- 서버 DTO 구조를 먼저 이해하고 화면을 설계할 것
+- 프론트에서 임의 계산이나 해석을 추가하지 않을 것
+- 다크 모드, 모바일, 정보 밀도, 가독성을 반복적으로 조정할 것
+- 컴포넌트, API 호출, 포맷팅 로직을 분리해 유지보수 가능하게 만들 것
+
+즉 Codex는 구현 속도를 높이는 도구였고,  
+화면 구조와 책임 분리는 프로젝트 요구사항에 맞게 직접 통제했습니다.
+
+## Frontend Design Direction
+
+이 UI는 “거래 화면”보다 “리서치 브리프”에 가깝게 설계했습니다.
+
+- 상단에서 자산, 시간축, 핵심 결론을 먼저 보여줌
+- 그 아래에서 참여도, 구조, 지표, 시나리오를 순서대로 읽게 함
+- 시각적으로는 과장보다 안정적인 정보 전달을 우선함
+- 다크/라이트 모드를 모두 고려하되, 정보 밀도는 유지함
+
+## Technical Stack
+
+- Next.js 16
 - React 19
 - TypeScript
 - Tailwind CSS v4
 - ESLint
 
-## Current Routes
+## Code Structure
 
-- `/`
-  최신 리포트 상세를 기본 랜딩으로 렌더링합니다.
-  쿼리 파라미터 `symbol`, `reportType`를 지원합니다.
-- `/reports/[reportId]`
-  개별 리포트 상세 페이지입니다.
-- `/prototype/market-asset`
-  자산 카드/리포트 UX 실험용 프로토타입 페이지입니다.
+- `app/`
+  - 페이지와 라우팅
+- `components/report/`
+  - 리포트 화면 섹션 컴포넌트
+- `components/ui/`
+  - 재사용 가능한 UI 프리미티브
+- `lib/report-api.ts`
+  - API 호출과 base URL 처리
+- `lib/report-types.ts`
+  - 서버 응답 타입 정의
+- `lib/report-page-data.ts`
+  - 화면에 필요한 데이터 조립
+- `lib/format/*`
+  - 시간, 라벨, 설명 문구 포맷팅
 
-## API Integration
+이 구조를 택한 이유는 다음과 같습니다.
 
-프론트엔드는 API 서버의 DTO를 그대로 소비합니다.
+- API 호출과 렌더링 책임을 분리하기 위해
+- DTO 타입과 표시 로직을 섞지 않기 위해
+- 시간/라벨/설명 변경을 한 곳에서 다루기 위해
 
-현재 사용 중인 주요 엔드포인트:
+## Key Frontend Decisions
 
-- `GET /api/reports/latest/summary?symbol=BTCUSDT&reportType=SHORT_TERM`
-- `GET /api/reports/latest/detail?symbol=BTCUSDT&reportType=SHORT_TERM`
-- `GET /api/reports/{reportId}`
+### 1. API DTO를 truth source로 사용
 
-API Base URL은 아래 순서대로 탐색합니다.
+프론트는 서버 응답을 다시 해석하지 않습니다.  
+참여도, 변화율, 기준 시각은 프론트에서 새로 계산하지 않고 서버 값을 그대로 사용합니다.
 
-1. `AICA_SERVER_BASE_URL`
-2. `NEXT_PUBLIC_SERVER_BASE_URL`
-3. `AICA_API_BASE_URL`
-4. `NEXT_PUBLIC_API_BASE_URL`
-5. 기본값 `http://localhost:8082`
+### 2. 시간은 프론트에서 KST로만 변환
 
-예시:
+서버는 UTC 기준으로 내려주고, 프론트는 표시만 KST로 변환합니다.  
+이렇게 해야 저장 기준과 사용자 표시 기준을 분리할 수 있습니다.
 
-```bash
-set AICA_SERVER_BASE_URL=http://localhost:8082
-npm run dev
-```
+### 3. 계산보다 표현에 집중
 
-PowerShell 예시:
+이 프로젝트에서 프론트의 핵심은 계산 정확도가 아니라,
 
-```powershell
-$env:AICA_SERVER_BASE_URL = "http://localhost:8082"
-npm run dev
-```
+- 어떤 정보가 먼저 보여야 하는지
+- 어떤 라벨이 오해를 줄이는지
+- 어떤 섹션 구성이 읽기 흐름을 좋게 만드는지
 
-## Getting Started
+를 다듬는 일이었습니다.
 
-```bash
-npm install
-npm run dev
-```
+## What This Frontend Delivers
 
-브라우저에서 `http://localhost:3000`을 열면 됩니다.
+사용자는 이 화면에서 다음을 한 번에 읽을 수 있습니다.
 
-## Scripts
+- 현재 자산과 리포트 시간축
+- 현재 가격과 기준 시각
+- 핵심 결론 요약
+- 거래 참여도 카드
+- 구조 / 지지 / 저항 관련 정보
+- GPT 내러티브 기반 시나리오와 리스크 설명
 
-- `npm run dev`: 개발 서버 실행
-- `npm run build`: 프로덕션 빌드
-- `npm run start`: 빌드 결과 실행
-- `npm run lint`: ESLint 실행
+## Value of This Repository
 
-## Verification
+이 저장소의 가치는 단순히 화면을 만든 것보다,
 
-의미 있는 작업을 마치기 전 기본 검증 기준:
+- 서버 계산 결과를 실제 사용자 경험으로 연결했다는 점
+- 서버와 프론트의 책임을 분리했다는 점
+- Codex를 활용하면서도 구조와 기준은 직접 조정해 결과물을 만들었다는 점
 
-```bash
-npm run lint
-npm run build
-```
+에 있습니다.
 
-시각 변경이 크다면 아래도 함께 확인합니다.
+## Related Repository
 
-- desktop light mode
-- desktop dark mode
-- mobile light mode
-- mobile dark mode
-
-## Docker
-
-간단한 컨테이너 실행도 가능합니다.
-
-```bash
-docker build -t ai-coin-assist-frontend .
-docker run --rm -p 3000:3000 -e AICA_SERVER_BASE_URL=http://host.docker.internal:8082 ai-coin-assist-frontend
-```
-
-## Directory Direction
-
-- `app/`: App Router 페이지와 레이아웃
-- `components/report/`: 리포트 전용 섹션 컴포넌트
-- `components/ui/`: 재사용 UI 프리미티브
-- `lib/`: API fetcher, DTO 타입, 포맷팅 유틸리티
-
-## Working Rules
-
-- 서버가 준 의미를 클라이언트에서 다시 해석하지 않습니다.
-- 비어 있는 섹션은 자연스럽게 생략하되, 임의의 분석 문장을 생성하지 않습니다.
-- 데이터 shaping이 필요하면 프론트엔드 우회 로직보다 API DTO 확장을 우선 검토합니다.
-- 가능한 한 Server Component를 기본으로 사용하고, Client Component는 실제 상호작용이 필요한 경우에만 사용합니다.
-
-## Related Repositories
-
-- Batch: `C:\Users\tngus\batch`
-- API: `C:\Users\tngus\api`
-
+- Backend / Integrated Server: [Project-AiCoinAssist](https://github.com/SuHyeonEo/Project-AiCoinAssist)
